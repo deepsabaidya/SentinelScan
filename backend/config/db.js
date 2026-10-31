@@ -10,13 +10,12 @@ const mongoose = require('mongoose');
 const connectDB = async () => {
   const uri = process.env.MONGODB_URI;
 
-  if (!uri) {
-    console.error('\x1b[31m%s\x1b[0m', '=============================================================');
-    console.error('\x1b[31m%s\x1b[0m', 'FATAL ERROR: MONGODB_URI environment variable is not defined.');
-    console.error('\x1b[33m%s\x1b[0m', 'Please configure your MongoDB Atlas connection string in .env:');
-    console.error('\x1b[36m%s\x1b[0m', 'MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.abcde.mongodb.net/sentinelscan?retryWrites=true&w=majority');
-    console.error('\x1b[31m%s\x1b[0m', '=============================================================');
-    throw new Error('MONGODB_URI is required. Please provide a valid MongoDB Atlas connection string.');
+  if (!uri || uri.includes('<') || uri.includes('>')) {
+    console.warn('\x1b[33m%s\x1b[0m', '=============================================================');
+    console.warn('\x1b[33m%s\x1b[0m', '[MongoDB Atlas] Notice: MONGODB_URI is not set or contains placeholders (<username>/<password>).');
+    console.warn('\x1b[33m%s\x1b[0m', 'The server will start in degraded mode. To enable database operations, update backend/.env.');
+    console.warn('\x1b[33m%s\x1b[0m', '=============================================================');
+    throw new Error('MONGODB_URI is required or contains unreplaced <placeholders>.');
   }
 
   // Safety check: ensure no localhost URI is mistakenly used
