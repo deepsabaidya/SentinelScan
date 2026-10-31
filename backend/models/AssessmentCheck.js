@@ -48,5 +48,7 @@ const assessmentCheckSchema = new mongoose.Schema(
 assessmentCheckSchema.index({ assessmentId: 1, checkName: 1 });
 
 const AssessmentCheck = mongoose.model('AssessmentCheck', assessmentCheckSchema);
+const { wrapModel } = require('./modelWrapper');
+const { MockAssessmentCheck } = require('./inMemoryStore');
 
-module.exports = AssessmentCheck;
+module.exports = wrapModel(AssessmentCheck, MockAssessmentCheck);

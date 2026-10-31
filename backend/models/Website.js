@@ -46,5 +46,7 @@ const websiteSchema = new mongoose.Schema(
 websiteSchema.index({ userId: 1, domain: 1 });
 
 const Website = mongoose.model('Website', websiteSchema);
+const { wrapModel } = require('./modelWrapper');
+const { MockWebsite } = require('./inMemoryStore');
 
-module.exports = Website;
+module.exports = wrapModel(Website, MockWebsite);

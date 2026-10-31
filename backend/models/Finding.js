@@ -54,5 +54,7 @@ const findingSchema = new mongoose.Schema(
 findingSchema.index({ assessmentId: 1, severity: 1 });
 
 const Finding = mongoose.model('Finding', findingSchema);
+const { wrapModel } = require('./modelWrapper');
+const { MockFinding } = require('./inMemoryStore');
 
-module.exports = Finding;
+module.exports = wrapModel(Finding, MockFinding);

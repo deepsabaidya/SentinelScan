@@ -48,5 +48,7 @@ userSchema.statics.hashPassword = async function (password) {
 };
 
 const User = mongoose.model('User', userSchema);
+const { wrapModel } = require('./modelWrapper');
+const { MockUser } = require('./inMemoryStore');
 
-module.exports = User;
+module.exports = wrapModel(User, MockUser);

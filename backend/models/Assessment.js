@@ -76,5 +76,7 @@ assessmentSchema.index({ userId: 1, createdAt: -1 });
 assessmentSchema.index({ websiteId: 1, createdAt: -1 });
 
 const Assessment = mongoose.model('Assessment', assessmentSchema);
+const { wrapModel } = require('./modelWrapper');
+const { MockAssessment } = require('./inMemoryStore');
 
-module.exports = Assessment;
+module.exports = wrapModel(Assessment, MockAssessment);
