@@ -285,3 +285,96 @@ SentinelScan's decoupled architecture was structured for rapid transition into c
 ## 11. License & Academic Declaration
 
 This project is developed as an **MCA Technical Training Mini-Project**. It is licensed under the **MIT License**.
+
+---
+
+## 12. Docker Deployment in GitHub Codespaces
+
+SentinelScan uses two custom containers: Nginx serves the production React build on the frontend and Express runs on the internal backend network. MongoDB Atlas remains external.
+
+### Prerequisites
+
+- Docker Engine and Docker Compose available in GitHub Codespaces
+- A root `.env` file copied from `.env.example`
+- A reachable MongoDB Atlas connection string and a strong JWT secret
+
+Verify Docker in the Codespaces terminal:
+
+```bash
+docker --version
+docker version
+docker info
+docker compose version
+```
+
+If `docker info` reports a daemon connection error, reopen/refresh the Codespace and verify Docker feature/daemon availability. Docker Desktop is not required or accessible inside Codespaces.
+
+### Configure environment
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and set `MONGODB_URI`, `JWT_SECRET`, and the remaining runtime values. The frontend uses relative `/api` requests; do not add a personal Codespaces hostname.
+
+### Pull base images and inspect
+
+```bash
+docker pull node:22.14.0-alpine
+docker pull nginx:1.27.5-alpine
+docker images
+docker images -a
+docker images -q
+docker image inspect node:22.14.0-alpine
+docker image inspect nginx:1.27.5-alpine
+```
+
+### Build and deploy
+
+```bash
+docker compose build
+docker compose up -d
+docker compose ps
+docker ps
+docker compose logs --tail=100
+```
+
+Verify health through the proxy:
+
+```bash
+curl -fsS http://localhost:8083/
+curl -fsS http://localhost:8083/api/health
+```
+
+Open the Codespaces **Ports** panel, find port `8083`, set its visibility appropriately, and use **Open in Browser**.
+
+### Container management
+
+```bash
+docker compose restart
+docker compose stop
+docker compose start
+docker logs sentinelscan-backend-1
+docker logs sentinelscan-frontend-1
+docker compose down
+```
+
+### Resource inspection and cleanup
+
+Inspect resources before cleanup:
+
+```bash
+docker system df
+docker images
+docker ps -a
+```
+
+Pruning commands are destructive. Run them only after reviewing the output and receiving confirmation for the intended operation:
+
+```bash
+docker container prune
+docker image prune
+docker volume prune
+```
+
+Use `docker volume prune` only when unused volumes are known to be disposable. It can remove persistent project data and should not be used blindly. See `docs/docker-case-study/DOCKER_CASE_STUDY.md` for evidence checklist and observed limitations.

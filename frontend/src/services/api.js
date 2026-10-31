@@ -3,7 +3,7 @@
  * Uses native fetch API with automatic JWT Bearer token injection and error handling
  */
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
 /**
  * Helper to get the saved JWT token from localStorage
