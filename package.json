@@ -1,0 +1,23 @@
+{
+  "name": "sentinelscan",
+  "version": "1.0.0",
+  "description": "SentinelScan - Website Security & Vulnerability Assessment Dashboard (MCA Technical Training)",
+  "private": true,
+  "scripts": {
+    "server": "npm --prefix backend run dev",
+    "client": "npm --prefix frontend run dev",
+    "start": "node backend/server.js",
+    "test": "npm --prefix backend test",
+    "build": "npm --prefix frontend run build"
+  },
+  "keywords": [
+    "cybersecurity",
+    "vulnerability-scanner",
+    "security-audit",
+    "ssl-checker",
+    "headers-analysis",
+    "mca-project"
+  ],
+  "author": "SentinelScan Team",
+  "license": "MIT"
+}
