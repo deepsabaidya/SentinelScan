@@ -4,6 +4,7 @@
   "description": "SentinelScan - Website Security & Vulnerability Assessment Dashboard (MCA Technical Training)",
   "private": true,
   "scripts": {
+    "dev": "concurrently -n \"API,WEB\" -c \"cyan,magenta\" \"npm run server\" \"npm run client\"",
     "server": "npm --prefix backend run dev",
     "client": "npm --prefix frontend run dev",
     "start": "node backend/server.js",
@@ -19,5 +20,8 @@
     "mca-project"
   ],
   "author": "SentinelScan Team",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^10.0.6"
+  }
 }
