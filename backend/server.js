@@ -87,22 +87,33 @@ const PORT = process.env.PORT || 5000;
 
 // Start Server unless imported as a test module
 if (process.env.NODE_ENV !== 'test') {
+  const startListening = () => {
+    const server = app.listen(PORT, () => {
+      console.log('\x1b[36m%s\x1b[0m', '=============================================================');
+      console.log('\x1b[32m%s\x1b[0m', `  SENTINELSCAN SECURITY API SERVER RUNNING ON PORT: ${PORT}`);
+      console.log('\x1b[36m%s\x1b[0m', `  Health Check: http://localhost:${PORT}/api/health`);
+      console.log('\x1b[36m%s\x1b[0m', '=============================================================');
+    });
+
+    server.on('error', (err) => {
+      if (err.code === 'EADDRINUSE') {
+        console.error('\x1b[31m%s\x1b[0m', `[Port Conflict] Port ${PORT} is already in use by another process.`);
+        console.error('\x1b[33m%s\x1b[0m', `Kill the process using port ${PORT} or change PORT in backend/.env`);
+      } else {
+        console.error('[Server Error]', err);
+      }
+    });
+    return server;
+  };
+
   // Connect to MongoDB Atlas first
   connectDB()
     .then(() => {
-      app.listen(PORT, () => {
-        console.log('\x1b[36m%s\x1b[0m', '=============================================================');
-        console.log('\x1b[32m%s\x1b[0m', `  SENTINELSCAN SECURITY API SERVER RUNNING ON PORT: ${PORT}`);
-        console.log('\x1b[36m%s\x1b[0m', `  Health Check: http://localhost:${PORT}/api/health`);
-        console.log('\x1b[36m%s\x1b[0m', '=============================================================');
-      });
+      startListening();
     })
     .catch((err) => {
       console.error('\x1b[31m%s\x1b[0m', `[Server Init Failed] Could not establish MongoDB Atlas connection: ${err.message}`);
-      // Still listen so health and diagnostics can be reached even if DB config is pending
-      app.listen(PORT, () => {
-        console.warn(`[SentinelScan Server] Running in degraded mode on port ${PORT}. Configure MONGODB_URI in .env to enable database operations.`);
-      });
+      startListening();
     });
 }
 
